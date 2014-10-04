@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+    <head>
+        <title>affine plane of order 3</title>
+    <script src="snap.svg-min.js"></script>
+    </head>
+<body>
+    <svg id="svg" width="600" height="600" style="border: 1px solid #333"></svg>
+    <script>
+
+var s = Snap("#svg");
+
+var drawCircle = function(x, y) {
+    var r = 7;
+    var circ_color = "#d93232";
+    var bg_color = "#ffffff";
+
+    var c = s.circle(x, y, r);
+    c.attr({
+        fill: bg_color
+       ,stroke: circ_color
+       ,strokeWidth: 4
+    });
+
+    return c;
+};
+
+
+var drawLine = function(p1x, p1y, p2x, p2y) {
+    var l = s.line(p1x, p1y, p2x, p2y);
+    l.attr({
+        fill: "#000"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
+    return l;
+};
+
+var drawCircles = function(coords) {
+    for(var i = 0; i < coords.length; i++) {
+        drawCircle(coords[i][0], coords[i][1]);
+    }
+};
+
+var gridCoords = function(top_left, num_rows, num_cols, hsp, vsp) {
+    var coords = [];
+    for(var i = 0; i < num_rows; i++) {
+        for(var j = 0; j < num_cols; j++) {
+            var p = [top_left[0] + j*hsp, top_left[1] + i*vsp];
+            coords.push(p);
+        }
+    }
+    return coords;
+};
+
+
+var coords = gridCoords([100, 100], 3, 3, 45, 45);
+
+var coordArray = function() {
+    var arr = [];
+    for(var i = 0; i < arguments.length; i++) {
+        arr.push(coords[arguments[i]][0]);
+        arr.push(coords[arguments[i]][1]);
+    }
+
+    return arr;
+};
+
+var coordArrayToStr = function(arr) {
+    var s = "";
+    for (var i = 0; i < arr.length; i++) {
+        if(i > 0) {
+            if (i % 2 === 0) {
+                s += ", ";
+            } else {
+                s += " ";
+            }
+        }
+        s += arr[i];
+    }
+
+    return s;
+};
+
+var coordArrayStr = function() {
+    return coordArrayToStr(coordArray.apply(null, arguments));
+}
+
+
+// top-left loops
+
+var a = coordArray(1,6, 6);
+a[0] -= 10;
+a[1] -= 50;
+a[2] -= 140;
+a[3] -= 120;
+console.log(a)
+var curve = s.path("M"+coordArrayStr(5)+" C"+coordArrayToStr(a));
+curve.attr({
+    fill: "rgba(255, 255, 255, 0)"
+   ,stroke: "#000"
+   ,strokeWidth: 4
+});
+
+
+var a = coordArray(3,2, 2);
+a[0] -= 50;
+a[1] -= 10;
+a[2] -= 120;
+a[3] -= 140;
+console.log(a)
+var curve = s.path("M"+coordArrayStr(7)+" C"+coordArrayToStr(a));
+curve.attr({
+    fill: "rgba(255, 255, 255, 0)"
+   ,stroke: "#000"
+   ,strokeWidth: 4
+});
+
+// bottom-left loops
+
+var a = coordArray(3,8, 8);
+a[0] -= 50;
+a[1] += 10;
+a[2] -= 120;
+a[3] += 140;
+console.log(a)
+var curve = s.path("M"+coordArrayStr(1)+" C"+coordArrayToStr(a));
+curve.attr({
+    fill: "rgba(255, 255, 255, 0)"
+   ,stroke: "#000"
+   ,strokeWidth: 4
+});
+
+var a = coordArray(7,0, 0);
+a[0] -= 10;
+a[1] += 50;
+a[2] -= 140;
+a[3] += 120;
+console.log(a)
+var curve = s.path("M"+coordArrayStr(5)+" C"+coordArrayToStr(a));
+curve.attr({
+    fill: "rgba(255, 255, 255, 0)"
+   ,stroke: "#000"
+   ,strokeWidth: 4
+});
+
+
+drawLine.apply(null, coordArray(0, 1));
+drawLine.apply(null, coordArray(1, 2));
+drawLine.apply(null, coordArray(3, 4));
+drawLine.apply(null, coordArray(4, 5));
+drawLine.apply(null, coordArray(6, 7));
+drawLine.apply(null, coordArray(7, 8));
+
+drawLine.apply(null, coordArray(0, 3));
+drawLine.apply(null, coordArray(3, 6));
+drawLine.apply(null, coordArray(1, 4));
+drawLine.apply(null, coordArray(4, 7));
+drawLine.apply(null, coordArray(2, 5));
+drawLine.apply(null, coordArray(5, 8));
+
+drawLine.apply(null, coordArray(0, 4));
+drawLine.apply(null, coordArray(4, 8));
+drawLine.apply(null, coordArray(6, 4));
+drawLine.apply(null, coordArray(4, 2));
+
+drawCircles(coords);
+
+    </script>
+</body>
+</html>
+

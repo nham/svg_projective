@@ -6,9 +6,57 @@
     </head>
 <body>
     <svg id="svg" width="600" height="600" style="border: 1px solid #333"></svg>
+    <script src="util.js"></script>
     <script>
 
 var s = Snap("#svg");
+
+var gridsp = 45;
+var coords = gridCoords([100, 100], 3, 3, gridsp, gridsp);
+
+var coordArrayStr = function(indices) {
+    return coordArrayToStr(select_flatten(coords, indices));
+}
+
+
+var drawLines = function(svg) {
+    var color = "#000";
+    var width = 4;
+
+    var drawLine = function(p1x, p1y, p2x, p2y) {
+        var l = svg.line(p1x, p1y, p2x, p2y);
+        l.attr({
+            fill: color
+           ,stroke: color
+           ,strokeWidth: width
+        });
+        return l;
+    };
+
+    drawLine.apply(null, select_flatten(coords, [0, 1]));
+    drawLine.apply(null, select_flatten(coords, [1, 2]));
+    drawLine.apply(null, select_flatten(coords, [3, 4]));
+    drawLine.apply(null, select_flatten(coords, [4, 5]));
+    drawLine.apply(null, select_flatten(coords, [6, 7]));
+    drawLine.apply(null, select_flatten(coords, [7, 8]));
+
+    drawLine.apply(null, select_flatten(coords, [0, 3]));
+    drawLine.apply(null, select_flatten(coords, [3, 6]));
+    drawLine.apply(null, select_flatten(coords, [1, 4]));
+    drawLine.apply(null, select_flatten(coords, [4, 7]));
+    drawLine.apply(null, select_flatten(coords, [2, 5]));
+    drawLine.apply(null, select_flatten(coords, [5, 8]));
+
+    drawLine.apply(null, select_flatten(coords, [0, 4]));
+    drawLine.apply(null, select_flatten(coords, [4, 8]));
+    drawLine.apply(null, select_flatten(coords, [6, 4]));
+    drawLine.apply(null, select_flatten(coords, [4, 2]));
+
+};
+
+var drawFigure = function(svg) {
+    drawLines(svg);
+};
 
 var drawCircle = function(x, y) {
     var r = 7;
@@ -26,77 +74,23 @@ var drawCircle = function(x, y) {
 };
 
 
-var drawLine = function(p1x, p1y, p2x, p2y) {
-    var l = s.line(p1x, p1y, p2x, p2y);
-    l.attr({
-        fill: "#000"
-       ,stroke: "#000"
-       ,strokeWidth: 4
-    });
-
-    return l;
-};
-
 var drawCircles = function(coords) {
     for(var i = 0; i < coords.length; i++) {
         drawCircle(coords[i][0], coords[i][1]);
     }
 };
 
-var gridCoords = function(top_left, num_rows, num_cols, hsp, vsp) {
-    var coords = [];
-    for(var i = 0; i < num_rows; i++) {
-        for(var j = 0; j < num_cols; j++) {
-            var p = [top_left[0] + j*hsp, top_left[1] + i*vsp];
-            coords.push(p);
-        }
-    }
-    return coords;
-};
-
-
-var coords = gridCoords([100, 100], 3, 3, 45, 45);
-
-var coordArray = function() {
-    var arr = [];
-    for(var i = 0; i < arguments.length; i++) {
-        arr.push(coords[arguments[i]][0]);
-        arr.push(coords[arguments[i]][1]);
-    }
-
-    return arr;
-};
-
-var coordArrayToStr = function(arr) {
-    var s = "";
-    for (var i = 0; i < arr.length; i++) {
-        if(i > 0) {
-            if (i % 2 === 0) {
-                s += ", ";
-            } else {
-                s += " ";
-            }
-        }
-        s += arr[i];
-    }
-
-    return s;
-};
-
-var coordArrayStr = function() {
-    return coordArrayToStr(coordArray.apply(null, arguments));
-}
+drawFigure(s);
 
 
 // top-left loops
 
-var a = coordArray(1,6, 6);
+var a = select_flatten(coords, [1, 6, 6]);
 a[0] -= 10;
 a[1] -= 50;
 a[2] -= 140;
 a[3] -= 120;
-console.log(a)
-var curve = s.path("M"+coordArrayStr(5)+" C"+coordArrayToStr(a));
+var curve = s.path("M {0} C".format(coordArrayStr([5]))+coordArrayToStr(a));
 curve.attr({
     fill: "rgba(255, 255, 255, 0)"
    ,stroke: "#000"
@@ -104,13 +98,12 @@ curve.attr({
 });
 
 
-var a = coordArray(3,2, 2);
+var a = select_flatten(coords, [3, 2, 2]);
 a[0] -= 50;
 a[1] -= 10;
 a[2] -= 120;
 a[3] -= 140;
-console.log(a)
-var curve = s.path("M"+coordArrayStr(7)+" C"+coordArrayToStr(a));
+var curve = s.path("M {0} C".format(coordArrayStr([7]))+coordArrayToStr(a));
 curve.attr({
     fill: "rgba(255, 255, 255, 0)"
    ,stroke: "#000"
@@ -119,26 +112,24 @@ curve.attr({
 
 // bottom-left loops
 
-var a = coordArray(3,8, 8);
+var a = select_flatten(coords, [3, 8, 8]);
 a[0] -= 50;
 a[1] += 10;
 a[2] -= 120;
 a[3] += 140;
-console.log(a)
-var curve = s.path("M"+coordArrayStr(1)+" C"+coordArrayToStr(a));
+var curve = s.path("M {0} C".format(coordArrayStr([1]))+coordArrayToStr(a));
 curve.attr({
     fill: "rgba(255, 255, 255, 0)"
    ,stroke: "#000"
    ,strokeWidth: 4
 });
 
-var a = coordArray(7,0, 0);
+var a = select_flatten(coords, [7, 0, 0]);
 a[0] -= 10;
 a[1] += 50;
 a[2] -= 140;
 a[3] += 120;
-console.log(a)
-var curve = s.path("M"+coordArrayStr(5)+" C"+coordArrayToStr(a));
+var curve = s.path("M {0} C".format(coordArrayStr([5]))+coordArrayToStr(a));
 curve.attr({
     fill: "rgba(255, 255, 255, 0)"
    ,stroke: "#000"
@@ -146,24 +137,36 @@ curve.attr({
 });
 
 
-drawLine.apply(null, coordArray(0, 1));
-drawLine.apply(null, coordArray(1, 2));
-drawLine.apply(null, coordArray(3, 4));
-drawLine.apply(null, coordArray(4, 5));
-drawLine.apply(null, coordArray(6, 7));
-drawLine.apply(null, coordArray(7, 8));
 
-drawLine.apply(null, coordArray(0, 3));
-drawLine.apply(null, coordArray(3, 6));
-drawLine.apply(null, coordArray(1, 4));
-drawLine.apply(null, coordArray(4, 7));
-drawLine.apply(null, coordArray(2, 5));
-drawLine.apply(null, coordArray(5, 8));
+var dist = 80;
+var ideal1 = select_flatten(coords, [2]);
+var ideal2 = select_flatten(coords, [5]);
+var ideal3 = select_flatten(coords, [8]);
+var ideal4 = select_flatten(coords, [7]);
 
-drawLine.apply(null, coordArray(0, 4));
-drawLine.apply(null, coordArray(4, 8));
-drawLine.apply(null, coordArray(6, 4));
-drawLine.apply(null, coordArray(4, 2));
+// ideal2 and ideal4 are gridsp + dist away from grid point 4 (the middle)
+// to make ideal1 and ideal3 match, we use (dist - (gridsp * SQRT2 - gridsp))
+var diag_dist = dist - (gridsp * Math.SQRT2 - gridsp);
+ideal1[0] += diag_dist / Math.SQRT2;
+ideal1[1] -= diag_dist / Math.SQRT2;
+ideal2[0] += dist;
+ideal3[0] += diag_dist / Math.SQRT2;
+ideal3[1] += diag_dist / Math.SQRT2;
+ideal4[1] += dist;
+coords.push(ideal1);
+coords.push(ideal2);
+coords.push(ideal3);
+coords.push(ideal4);
+
+var svg_arc_string = function(rx, ry, x_axis_rot, large_arc_flag, sweep_flag, x, y) {
+    return "A "
+
+};
+
+var infline_rad = gridsp + dist;
+//s.path("M"+coordArrayToStr(ideal4)+" A "+infline_rad+" "+infline_rad
+
+
 
 drawCircles(coords);
 

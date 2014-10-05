@@ -132,6 +132,66 @@ var drawLines = function(svg) {
     drawLine.apply(null, select_flatten(coords, [0, 8]));
     drawLine.apply(null, select_flatten(coords, [6, 2]));
 
+    // draw the lines to ideal points
+    drawLine.apply(null, select_flatten(coords, [2, 9]));
+    var cs = select_flatten(coords, [9, 5]);
+    cs[0] += 70;
+    cs[1] -= 70;
+    var curve = svg.path("M {0} Q {1}".format(coordArrayStr([1]),
+                                              coordArrayToStr(cs)));
+    curve.attr({
+        fill: "rgba(255, 255, 255, 0)"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
+
+    drawLine.apply(null, select_flatten(coords, [5, 10]));
+    var cs = select_flatten(coords, [10, 2]);
+    cs[0] += 85;
+    var curve = svg.path("M {0} Q {1}".format(coordArrayStr([8]),
+                                              coordArrayToStr(cs)));
+    curve.attr({
+        fill: "rgba(255, 255, 255, 0)"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
+    drawLine.apply(null, select_flatten(coords, [8, 11]));
+    var cs = select_flatten(coords, [11, 7]);
+    cs[0] += 70;
+    cs[1] += 70;
+    var curve = svg.path("M {0} Q {1}".format(coordArrayStr([5]),
+                                              coordArrayToStr(cs)));
+    curve.attr({
+        fill: "rgba(255, 255, 255, 0)"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
+    drawLine.apply(null, select_flatten(coords, [7, 12]));
+    var cs = select_flatten(coords, [12, 8]);
+    cs[1] += 85;
+    var curve = svg.path("M {0} Q {1}".format(coordArrayStr([6]),
+                                              coordArrayToStr(cs)));
+    curve.attr({
+        fill: "rgba(255, 255, 255, 0)"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
+    // this is the line "at infinity"
+    var infline_rad = gridsp + dist;
+    var curve = svg.path("M {0} A {1} {1} 0 0 0 {2}".format(coordArrayStr([12]),
+                                                            infline_rad,
+                                                            coordArrayStr([9])));
+
+    curve.attr({
+        fill: "rgba(255, 255, 255, 0)"
+       ,stroke: "#000"
+       ,strokeWidth: 4
+    });
+
 };
 
 
@@ -164,9 +224,6 @@ var drawFigure = function(svg) {
 
 drawFigure(s);
 
-
-var infline_rad = gridsp + dist;
-//s.path("M"+coordArrayToStr(ideal4)+" A "+infline_rad+" "+infline_rad
 
     </script>
 </body>
